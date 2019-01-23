@@ -7,6 +7,11 @@ import com.udacity.baking.models.Recipe;
 
 import java.util.List;
 
+/**
+ *
+ * @author Erick Prieto
+ * @since 2018
+ */
 public class MainViewModel extends ViewModel {
     /**
      * Tag that identify all messages sent to loggger by this class.

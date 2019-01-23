@@ -18,6 +18,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author Erick Prieto
+ * @since 2018
+ */
 @Entity(tableName = "step",foreignKeys =
 @ForeignKey(entity=RecipeBaseEntity.class, parentColumns = "id", childColumns = "recipeId"))
 public class StepEntity implements Parcelable {

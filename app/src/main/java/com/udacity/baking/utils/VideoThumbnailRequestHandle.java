@@ -12,6 +12,11 @@ import com.squareup.picasso.RequestHandler;
 import java.io.IOException;
 import java.util.HashMap;
 
+/**
+ *
+ * @author Erick Prieto
+ * @since 2018
+ */
 public class VideoThumbnailRequestHandle extends RequestHandler {
 
     /**
@@ -27,6 +32,14 @@ public class VideoThumbnailRequestHandle extends RequestHandler {
         this.timeFrameAt = timeFrameAt;
     }
 
+    public Integer getTimeFrameAt() {
+        return timeFrameAt;
+    }
+
+    public void setTimeFrameAt(Integer timeFrameAt) {
+        this.timeFrameAt = timeFrameAt;
+    }
+
     @Override
     public boolean canHandleRequest(Request data)
     {
@@ -39,9 +52,9 @@ public class VideoThumbnailRequestHandle extends RequestHandler {
     {
         try {
             Log.v(TAG,"load data: " + data.uri.toString());
-            Bitmap bm = retriveVideoFrameFromVideo(data.uri.toString(), timeFrameAt);
-            Log.v(TAG,"load bm: " + bm);
-            return new Result(bm, Picasso.LoadedFrom.DISK);
+            Bitmap bmp = retriveVideoFrameFromVideo(data.uri.toString(), timeFrameAt);
+            Log.v(TAG,"load bmp: " + bmp);
+            return new Result(bmp, Picasso.LoadedFrom.DISK);
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage());
             throw new IOException(ex.getMessage());

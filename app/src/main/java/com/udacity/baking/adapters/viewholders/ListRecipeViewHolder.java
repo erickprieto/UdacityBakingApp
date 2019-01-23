@@ -1,4 +1,4 @@
-package com.udacity.baking.adapters;
+package com.udacity.baking.adapters.viewholders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -7,6 +7,11 @@ import android.widget.TextView;
 
 import com.udacity.baking.R;
 
+/**
+ *
+ * @author Erick Prieto
+ * @since 2018
+ */
 public class ListRecipeViewHolder extends RecyclerView.ViewHolder {
 
 

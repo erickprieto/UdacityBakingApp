@@ -3,12 +3,16 @@ package com.udacity.baking;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.res.AssetManager;
 import android.util.Log;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
 import com.udacity.baking.services.BakingService;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +25,10 @@ import java.util.Properties;
      * @since 2018
      */
     public class BakingApplication extends Application {
+
+        public static final String PREFERENCES_WIDGETPROVIDER_TITLE = "PREFERENCES_WIDGETPROVIDER_TITLE";
+        public static final String PREFERENCES_WIDGETPROVIDER_CONTENT = "PREFERENCES_WIDGETPROVIDER_CONTENT";
+        public static final String PREFERENCES_WIDGETPROVIDER_ID = "PREFERENCES_WIDGETPROVIDER_ID";
 
         /**
          * Tag that identify all messages sent to loggger by this class.
@@ -42,6 +50,8 @@ import java.util.Properties;
          */
         private static Properties configurationProperties;
 
+        private static SharedPreferences sharedPreferences;
+
         /**
          * Uses notification otto event bus Framework. Otto avoid uses callbacks,
          * that is deacopuple publisher and subscribers events.
@@ -57,6 +67,7 @@ import java.util.Properties;
             super.onCreate();
             context = this;
             databaseIntent = new Intent(this, BakingService.class);
+            sharedPreferences = getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE);
             startService(databaseIntent);
         }
 
@@ -74,6 +85,10 @@ import java.util.Properties;
         public Properties getConfigurationProperties() {
             if(configurationProperties != null) { return  configurationProperties; }
             else { return providesProperties(); }
+        }
+
+        public static SharedPreferences getSharedPreferences() {
+            return sharedPreferences;
         }
 
         /**
@@ -123,4 +138,21 @@ import java.util.Properties;
             return eventBus;
         }
 
+        /**
+         * Indicate if this version is in Developing (debug)
+         * or its a release version.
+         * * @return true if this name version has label SNAPSHOT.
+         */
+        public static boolean isDebugVersion() {
+            try {
+                PackageInfo info = context
+                        .getPackageManager()
+                        .getPackageInfo(context.getPackageName(), 0);
+                String version = info.versionName;
+                return StringUtils.contains(version,"SNAPSHOT");
+            } catch (Exception ex) {
+                Log.e(TAG, ex.getMessage());
+                return true;
+            }
+        }
     }

@@ -1,14 +1,13 @@
 package com.udacity.baking.activities;
 
-import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentTransaction;
 import android.app.Service;
 import android.arch.lifecycle.ViewModelProviders;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,26 +16,30 @@ import com.squareup.otto.Subscribe;
 import com.udacity.baking.BakingApplication;
 import com.udacity.baking.R;
 
-import com.udacity.baking.events.ListRecipesFetchedEvent;
-import com.udacity.baking.fragments.ListRecipesFragment;
+import com.udacity.baking.events.onRecipeDetailsRequestEvent;
+import com.udacity.baking.fragments.RecipesListFragment;
 import com.udacity.baking.models.Recipe;
 import com.udacity.baking.services.BakingService;
 import com.udacity.baking.viewmodels.MainViewModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
-
-public class MainActivity extends AppCompatActivity {
+/**
+ *
+ * @author Erick Prieto
+ * @since 2018
+ */
+public class RecipesListActivity extends AppCompatActivity {
 
     /**
      * Tag that identify all messages sent to loggger by this class.
      */
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = RecipesListActivity.class.getSimpleName();
 
     private static final String ID_SERIAL_LIST_RECIPES = "listRecipes";
+    private static final String LIST_RECIPE_FRAGMENT_TAG = "fragment_list_recipe";
+    private static final String DETAIL_RECIPE_FRAGMENT_TAG = "fragment_detail_recipe";
 
     private MainViewModel mainViewModel;
 
@@ -44,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private BakingServiceConnection bakingServiceConnection = new BakingServiceConnection();
     private boolean connectedService;
     private Intent intentBakingService;
+    private boolean fragmentInitial = true;
+
 
     public List<Recipe> getListRecipes() {
         return mainViewModel.getRecipes();
@@ -57,12 +62,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final String TAG_M = "onCreate ";
-        setContentView(R.layout.main_activity);
+        setContentView(R.layout.recipeslist_activity);
         if(this.mainViewModel == null) {
             this.mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         }
         intentBakingService = new Intent(this, BakingService.class);
         bindService(intentBakingService, bakingServiceConnection, Service.BIND_AUTO_CREATE);
+
+        if (fragmentInitial) {
+            loadInitialFragment();
+        }
     }
 
     @Override
@@ -87,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
         if (this.mainViewModel.getRecipes() == null) {
             this.mainViewModel.setRecipes(savedInstanceState.getParcelableArrayList(ID_SERIAL_LIST_RECIPES));
         }
-
     }
 
     @Override
@@ -96,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         final String TAG_M = "onResume ";
         BakingApplication.getEventBus().register(this);
         Log.v(TAG, TAG_M);
-        loadFragment();
+
     }
 
     @Override
@@ -122,17 +130,41 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         final String TAG_M = "onStop ";
         Log.v(TAG, TAG_M);
-        unbindService(bakingServiceConnection);
+        if(connectedService) {
+//            unbindService(bakingServiceConnection);
+        }
     }
 
-    private void loadFragment() {
-        ListRecipesFragment fr = new ListRecipesFragment();
+    private void setUpActionBar() {
+
+        ActionBar supportActionBar = getSupportActionBar();
+
+        if (supportActionBar != null) {
+            supportActionBar.setElevation(4.0f);
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_cake_24px);
+        }
+    }
+
+    private void loadInitialFragment() {
+        RecipesListFragment fr = RecipesListFragment.newInstance(null);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.mainActivity_rootContainer, fr)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .replace(R.id.mainActivity_firstFragmentContainer, fr, LIST_RECIPE_FRAGMENT_TAG)
                 .commit();
     }
+
+    @Subscribe
+    public void loadRecipeDetailActivity(onRecipeDetailsRequestEvent event) {
+        final String TAG_M = "loadRecipeDetailActivity ";
+        Log.v(TAG, TAG_M + event.getRecipe().toString());
+        Intent intent = new Intent(this, RecipeDetailActivity.class);
+        intent.putExtra(RecipeDetailActivity.ID_RECIPE, event.getRecipe());
+        startActivityForResult(intent, 1);
+    }
+
+
 
     class BakingServiceConnection implements ServiceConnection {
 
@@ -145,7 +177,6 @@ public class MainActivity extends AppCompatActivity {
                 bakingService.fetchRecipes();
             } else {
                 mainViewModel.setRecipes(bakingService.getRecipes());
-                loadFragment();
             }
             connectedService = true;
         }
@@ -163,8 +194,6 @@ public class MainActivity extends AppCompatActivity {
             Log.v(TAG, TAG_M + "++++++++++++++++++++++++++++++++++++++++++++++");
             connectedService = false;
         }
-
-
     }
 
 }

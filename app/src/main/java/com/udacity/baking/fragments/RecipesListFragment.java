@@ -12,33 +12,53 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.squareup.otto.Subscribe;
 import com.udacity.baking.BakingApplication;
 import com.udacity.baking.R;
-import com.udacity.baking.activities.MainActivity;
+import com.udacity.baking.activities.RecipesListActivity;
 import com.udacity.baking.adapters.RecipeListAdapter;
-import com.udacity.baking.events.ListRecipesFetchedEvent;
+import com.udacity.baking.events.onListRecipesFetchedEvent;
 import com.udacity.baking.models.Recipe;
 
 import java.util.ArrayList;
 
-public class ListRecipesFragment extends Fragment {
+/**
+ *
+ * @author Erick Prieto
+ * @since 2018
+ */
+public class RecipesListFragment extends Fragment {
 
     /**
      * Tag that identify all messages sent to loggger by this class.
      */
-    private static final String TAG = ListRecipesFragment.class.getSimpleName();
+    private static final String TAG = RecipesListFragment.class.getSimpleName();
 
-    public static final String ID_SERIAL_LIST_RECIPES = "list";
+    public static final String ID_SERIAL_LIST_RECIPES = "listRecipes";
 
     private RecipeListAdapter adapter;
 
-    private MainActivity activity;
+    private RecipesListActivity activity;
 
+    public static RecipesListFragment newInstance(Bundle bundle) {
+        RecipesListFragment result = new RecipesListFragment();
+        result.setArguments(bundle);
+        return result;
+    }
 
     public RecyclerView getRecyclerView() {
-        return this.getView().findViewById(R.id.mainFragment_listRecipeRecyclerView);
+        return this.getView().findViewById(R.id.listRecipesFragment_listRecipeRecyclerView);
+    }
+    public ProgressBar getProgressBar() {
+        return this.getView().findViewById(R.id.listRecipesFragment_loadProgressBar);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
     }
 
     @Nullable
@@ -46,7 +66,7 @@ public class ListRecipesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final String TAG_M = "onCreateView ";
         Log.v(TAG, TAG_M);
-        activity =  (MainActivity) getActivity();
+        activity =  (RecipesListActivity) getActivity();
         return inflater.inflate(R.layout.listrecipes_fragment, container, false);
 
     }
@@ -55,6 +75,7 @@ public class ListRecipesFragment extends Fragment {
     public void onStart() {
         super.onStart();
         final String TAG_M = "onStart ";
+        getProgressBar().setVisibility(View.VISIBLE);
         Log.v(TAG, TAG_M);
 
     }
@@ -65,20 +86,23 @@ public class ListRecipesFragment extends Fragment {
         final String TAG_M = "onResume ";
         BakingApplication.getEventBus().register(this);
         Log.v(TAG, TAG_M);
-
+        activity.getSupportActionBar().setTitle(getResources().getString(R.string.recipeListFragment_title));
         getRecyclerView().setLayoutManager(getGridLayoutManager());
         assignAdapterViews();
 
         if (activity.getListRecipes() != null) {
-            this.adapter.putRecipes(activity.getListRecipes());
+            adapter.putRecipes(activity.getListRecipes());
+            getProgressBar().setVisibility(View.INVISIBLE);
         }
+
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         final String TAG_M = "onSaveInstanceState ";
         Log.v(TAG, TAG_M);
-        outState.putParcelableArrayList(ID_SERIAL_LIST_RECIPES, new ArrayList<>(this.activity.getListRecipes()));
+        outState.putParcelableArrayList(ID_SERIAL_LIST_RECIPES
+                , new ArrayList<>(this.activity.getListRecipes()));
         super.onSaveInstanceState(outState);
     }
 
@@ -114,7 +138,8 @@ public class ListRecipesFragment extends Fragment {
     }
 
     /**
-     * Assign to {@link ListRecipesFragment#getRecyclerView()} an Adapter for {@link com.udacity.baking.models.Recipe}.
+     * Assign to {@link RecipesListFragment#getRecyclerView()}
+     * an Adapter for {@link com.udacity.baking.models.Recipe}.
      */
     private void assignAdapterViews() {
         final String TAG_M = "assignAdapterViews() ";
@@ -124,10 +149,12 @@ public class ListRecipesFragment extends Fragment {
     }
 
     @Subscribe
-    public void onListRecipesFetched(ListRecipesFetchedEvent event) {
+    public void onListRecipesFetched(onListRecipesFetchedEvent event) {
         final String TAG_M = "onListRecipesFetched ";
         Log.v(TAG, TAG_M + event.getRecipes().size());
+
         activity.setListRecipes(event.getRecipes());
-        this.adapter.putRecipes(activity.getListRecipes());
+        adapter.putRecipes(activity.getListRecipes());
+        getProgressBar().setVisibility(View.INVISIBLE);
     }
 }

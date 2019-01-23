@@ -7,6 +7,11 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
 
+/**
+ *
+ * @author Erick Prieto
+ * @since 2018
+ */
 public interface RecipeContract {
 
     @GET("baking.json")

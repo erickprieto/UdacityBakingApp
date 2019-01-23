@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    style="?android:attr/buttonBarStyle">
+
+    <Button
+        android:id="@+id/detailStep_prevButton"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_height="match_parent"
+        android:drawableLeft="@drawable/ic_baseline_arrow_left_24px"
+        android:text="@string/detailStep_prevButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/detailStep_nextButton"
+        app:layout_constraintWidth_percent="0.495" />
+
+    <Button
+        android:id="@+id/detailStep_nextButton"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_height="match_parent"
+        android:drawableRight="@drawable/ic_baseline_arrow_right_24px"
+        android:text="@string/detailStep_nextButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.495" />
+
+</android.support.constraint.ConstraintLayout>

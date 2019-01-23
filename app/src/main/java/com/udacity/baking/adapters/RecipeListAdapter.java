@@ -8,12 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.udacity.baking.BakingApplication;
 import com.udacity.baking.R;
+import com.udacity.baking.adapters.viewholders.ListRecipeViewHolder;
+import com.udacity.baking.events.onRecipeDetailsRequestEvent;
 import com.udacity.baking.models.Recipe;
 import com.udacity.baking.utils.VideoThumbnailDownloader;
 
 import java.util.List;
 
+/**
+ *
+ * @author Erick Prieto
+ * @since 2018
+ */
 public class RecipeListAdapter extends RecyclerView.Adapter<ListRecipeViewHolder> {
 
     /**
@@ -55,14 +63,16 @@ public class RecipeListAdapter extends RecyclerView.Adapter<ListRecipeViewHolder
     public void onBindViewHolder(@NonNull ListRecipeViewHolder holder, int position) {
         final String TAG_M = "onBindViewHolder() ";
         final Recipe recipe = recipeList.get(position);
-        VideoThumbnailDownloader.downloader(recipe.getSteps().get(2).getVideoURL()
+        VideoThumbnailDownloader.downloaderRecipeVideoThumbnail(recipe.getSteps().get(2).getVideoURL()
                 , context
-                , holder.getThumbnailRecipeImageView());
+                , holder.getThumbnailRecipeImageView(), 30);
         holder.getNameRecipeTextView().setText(recipe.getName());
         holder.getServingsRecipeTextView().setText(formatServings(recipe.getServings()));
+
         holder.getThumbnailRecipeImageView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                BakingApplication.getEventBus().post(new onRecipeDetailsRequestEvent(recipe));
                 Log.v(TAG, "Click " + recipe.getName());
             }
         });
@@ -79,13 +89,10 @@ public class RecipeListAdapter extends RecyclerView.Adapter<ListRecipeViewHolder
 
     @Override
     public int getItemCount() {
-        int count;
+        int count= 0;
 
         if(this.recipeList != null && !this.recipeList.isEmpty()) {
             count = this.recipeList.size();
-        }
-        else {
-            count = 0;
         }
         return count;
     }

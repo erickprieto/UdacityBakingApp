@@ -4,10 +4,16 @@ import com.udacity.baking.models.Recipe;
 
 import java.util.List;
 
-public class ListRecipesFetchedEvent {
+/**
+ *
+ * @author Erick Prieto
+ * @since 2018
+ */
+public class onListRecipesFetchedEvent {
+
     private List<Recipe> recipes;
 
-    public ListRecipesFetchedEvent(List<Recipe> recipes) {
+    public onListRecipesFetchedEvent(List<Recipe> recipes) {
         this.recipes = recipes;
     }
 

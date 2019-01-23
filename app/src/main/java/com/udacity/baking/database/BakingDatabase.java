@@ -1,23 +1,23 @@
 package com.udacity.baking.database;
 
-import android.arch.lifecycle.Observer;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
 import com.udacity.baking.database.dao.RecipeDao;
 import com.udacity.baking.database.entities.IngredientEntity;
 import com.udacity.baking.database.entities.RecipeBaseEntity;
-import com.udacity.baking.database.entities.RecipeEntity;
 import com.udacity.baking.database.entities.StepEntity;
 
-import java.util.List;
-
+/**
+ *
+ * @author Erick Prieto
+ * @since 2018
+ */
 @Database(entities = { IngredientEntity.class, StepEntity.class, RecipeBaseEntity.class }, version = 1, exportSchema = false)
 public abstract class BakingDatabase extends RoomDatabase {
 

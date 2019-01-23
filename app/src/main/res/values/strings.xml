@@ -2,4 +2,35 @@
     <string name="app_name">Udacity Baking</string>
     <string name="recipeName">Recipe Name</string>
     <string name="servings">%d (servings)</string>
+
+
+    <string name="stepdescription_textview">Step Description</string>
+    <string name="stepnumber_textview">Step Number</string>
+    <string name="nameingredient_textview">Ingredient</string>
+    <string name="qtyingredient_textview">(1 QTY)</string>
+
+    <string name="recipeListFragment_title">Baking Time</string>
+
+    <string name="detailStepsFragment_title">Step: </string>
+    <string name="detailStepsFragment_textView">Step details</string>
+    <string name="detailStepsFragment_ingredientsLabelTextView">Ingredients list:</string>
+
+    <string name="detailStep_prevButton">Previous</string>
+    <string name="detailStep_nextButton">Next</string>
+    <string name="detailStepsFragment_stepsLabelTextView">Steps list:</string>
+
+    <string translatable="false" name="recipeActivity_widgetRemovedToast">Widget Removed</string>
+    <string translatable="false" name="recipeActivity_widgetAddedToast">Recipe Added</string>
+
+    <string name="stepDetailActivity_Title">Step</string>
+    <string name="stepDetailActivity_Introduction">Introdution</string>
+
+    <string translatable="false" name="menuItem_title">Widget</string>
+
+    <!-- Dummy Text for design time -->
+    <string translatable="false" name="widgetProvider_recipeTitleDummyTextView">Recipe Title</string>
+    <string translatable="false" name="widgetProvider_ingredientsDummyTextView">Ingredients\Ingredients\Ingredients\Ingredients</string>
+
+
+
 </resources>

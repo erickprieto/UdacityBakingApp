@@ -7,13 +7,14 @@
     android:layout_margin="4dp">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/mainFragment_listRecipeRecyclerView"
+        android:id="@+id/listRecipesFragment_listRecipeRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="0dp" />
+        android:elevation="0dp"
+        android:layoutAnimation="@anim/fromright_layoutanimation" />
 
     <ProgressBar
-        android:id="@+id/mainFragment_loadProgressBar"
+        android:id="@+id/listRecipesFragment_loadProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"

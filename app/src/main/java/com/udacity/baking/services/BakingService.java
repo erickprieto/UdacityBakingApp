@@ -2,9 +2,7 @@ package com.udacity.baking.services;
 
 import android.arch.lifecycle.LifecycleService;
 import android.arch.lifecycle.Observer;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -13,7 +11,7 @@ import android.util.Log;
 import com.udacity.baking.BakingApplication;
 import com.udacity.baking.database.BakingDatabase;
 import com.udacity.baking.database.entities.RecipeEntity;
-import com.udacity.baking.events.ListRecipesFetchedEvent;
+import com.udacity.baking.events.onListRecipesFetchedEvent;
 import com.udacity.baking.models.Recipe;
 import com.udacity.baking.net.TO.RecipeTO;
 import com.udacity.baking.net.contracts.RecipeContract;
@@ -26,6 +24,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ *
+ * @author Erick Prieto
+ * @since 2018
+ */
 public class BakingService extends LifecycleService {
 
     /**
@@ -50,7 +53,7 @@ public class BakingService extends LifecycleService {
             @Override
             public void onChanged(@Nullable List<RecipeEntity> recipeEntities) {
                 recipes = RecipeEntity.toListModel(recipeEntities);
-                BakingApplication.getEventBus().post(new ListRecipesFetchedEvent(recipes));
+                BakingApplication.getEventBus().post(new onListRecipesFetchedEvent(recipes));
                 Log.v(TAG, recipes.toString());
             }
         });

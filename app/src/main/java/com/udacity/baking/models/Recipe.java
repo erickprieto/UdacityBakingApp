@@ -10,6 +10,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author Erick Prieto
+ * @since 2018
+ */
 public class Recipe implements Parcelable {
 
     private Integer id;
